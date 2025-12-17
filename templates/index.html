@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roofing Estimator</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Automation preview</p>
+          <h1>Roofing scope in one upload</h1>
+          <p class="lede">
+            Upload architectural drawings and specifications. A predetermined agent prompt
+            (placeholder below) will extract the roofing scope of work and deliver a
+            detailed summary with products, installation details, and project notes.
+          </p>
+          <div class="tag">System prompt (placeholder)</div>
+          <pre class="prompt">{{ placeholder_prompt }}</pre>
+        </div>
+        <div class="upload-card">
+          <h2>Upload documents</h2>
+          <p class="muted">
+            Start with a single PDF. The agent-ready prompt below will be injected when the
+            backend is wired to your model.
+          </p>
+          <form id="upload-form">
+            <label for="file-input" class="file-drop">
+              <div class="icon">⬆️</div>
+              <div>
+                <strong>Select a PDF</strong>
+                <p class="muted">Drop a file here or click to browse.</p>
+              </div>
+              <input id="file-input" type="file" accept="application/pdf" hidden />
+            </label>
+            <button type="submit">Analyze roofing scope</button>
+          </form>
+          <div id="status" class="status"></div>
+        </div>
+      </div>
+    </header>
+    <main id="results" class="results hidden">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Summary</p>
+            <h3>Roofing scope of work</h3>
+          </div>
+          <div id="file-name" class="pill"></div>
+        </div>
+        <pre id="summary"></pre>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <p class="eyebrow">Products</p>
+          <ul id="products"></ul>
+        </div>
+        <div class="panel">
+          <p class="eyebrow">Assumptions</p>
+          <ul id="assumptions"></ul>
+        </div>
+      </div>
+    </main>
+    <script>
+      const form = document.getElementById("upload-form");
+      const fileInput = document.getElementById("file-input");
+      const status = document.getElementById("status");
+      const results = document.getElementById("results");
+      const summaryEl = document.getElementById("summary");
+      const productsEl = document.getElementById("products");
+      const assumptionsEl = document.getElementById("assumptions");
+      const fileNameEl = document.getElementById("file-name");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        status.textContent = "";
+
+        const file = fileInput.files[0];
+        if (!file) {
+          status.textContent = "Please choose a PDF.";
+          status.className = "status error";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        status.textContent = "Analyzing…";
+        status.className = "status";
+
+        try {
+          const response = await fetch("/api/analyze", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || "Upload failed");
+          }
+
+          const data = await response.json();
+          results.classList.remove("hidden");
+          summaryEl.textContent = data.summary;
+          fileNameEl.textContent = data.fileName;
+
+          productsEl.innerHTML = "";
+          data.products.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            productsEl.appendChild(li);
+          });
+
+          assumptionsEl.innerHTML = "";
+          data.assumptions.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            assumptionsEl.appendChild(li);
+          });
+
+          status.textContent = "Analysis complete.";
+          status.className = "status success";
+        } catch (error) {
+          status.textContent = error.message;
+          status.className = "status error";
+          results.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
