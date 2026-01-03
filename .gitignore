@@ -1,2 +1,5 @@
 node_modules/
 .env
+.godot/
+.import/
+export_presets.cfg

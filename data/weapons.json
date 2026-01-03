@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "entries": {
+    "starter_blade": {
+      "name": "Starter Blade",
+      "damage": 5,
+      "cooldown": 0.8
+    }
+  }
+}

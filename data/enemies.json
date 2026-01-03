@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "entries": {
+    "simple": {
+      "name": "Simple Enemy",
+      "health": 15,
+      "speed": 120
+    }
+  }
+}
