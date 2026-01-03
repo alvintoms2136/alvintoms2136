@@ -1,4 +1,4 @@
-extends "res://scripts/entities/base_entity.gd"
+extends "res://scripts/entities/BaseEntity.gd"
 class_name SimpleEnemy
 
 @export var target_path: NodePath

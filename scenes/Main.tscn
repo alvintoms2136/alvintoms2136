@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://main"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/entities/simple_enemy.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/ui/debug_hud.tscn" id="4"]
+[ext_resource type="Script" path="res://scripts/main/Main.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Player.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/entities/SimpleEnemy.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/ui/DebugHUD.tscn" id="4"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1")
