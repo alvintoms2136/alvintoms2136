@@ -1,0 +1,19 @@
+services:
+  openclaw:
+    build: .
+    container_name: openclaw
+    ports:
+      - "18789:18789"
+    env_file:
+      - .env
+    environment:
+      GATEWAY_MODE: ${GATEWAY_MODE:-local}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CLAWDBOT_GATEWAY_TOKEN: ${CLAWDBOT_GATEWAY_TOKEN:-}
+    volumes:
+      - openclaw-data:/home/clawdbot/.openclaw
+    restart: unless-stopped
+
+volumes:
+  openclaw-data:
